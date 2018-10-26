@@ -4,7 +4,7 @@ LABEL maintainer="noogen <friends@niiknow.org>"
 
 ENV DEBIAN_FRONTEND=noninteractive \
     VESTA=/usr/local/vesta \
-    GOLANG_VERSION=1.10.3 \
+#    GOLANG_VERSION=1.10.3 \
     NGINX_BUILD_DIR=/usr/src/nginx \
     NGINX_DEVEL_KIT_VERSION=0.3.0 NGINX_SET_MISC_MODULE_VERSION=0.31 \
     NGINX_VERSION=1.14.0 \
@@ -14,8 +14,8 @@ ENV DEBIAN_FRONTEND=noninteractive \
 
 RUN \
     cd /tmp \
-    && echo "nginx mysql bind clamav ssl-cert dovecot dovenull Debian-exim postgres debian-spamd epmd couchdb memcache mongodb redis" | xargs -n1 groupadd -K GID_MIN=100 -K GID_MAX=999 ${g} \
-    && echo "nginx nginx mysql mysql bind bind clamav clamav dovecot dovecot dovenull dovenull Debian-exim Debian-exim postgres postgres debian-spamd debian-spamd epmd epmd couchdb couchdb memcache memcache mongodb mongodb redis redis" | xargs -n2 useradd -d /nonexistent -s /bin/false -K UID_MIN=100 -K UID_MAX=999 -g ${g} \
+    && echo "nginx mysql bind clamav ssl-cert dovecot dovenull Debian-exim postgres debian-spamd epmd memcache redis" | xargs -n1 groupadd -K GID_MIN=100 -K GID_MAX=999 ${g} \
+    && echo "nginx nginx mysql mysql bind bind clamav clamav dovecot dovecot dovenull dovenull Debian-exim Debian-exim postgres postgres debian-spamd debian-spamd epmd epmd memcache memcache redis redis" | xargs -n2 useradd -d /nonexistent -s /bin/false -K UID_MIN=100 -K UID_MAX=999 -g ${g} \
     && usermod -d /var/lib/mysql mysql \
     && usermod -d /var/cache/bind bind \
     && usermod -d /var/lib/clamav -a -G Debian-exim clamav && usermod -a -G mail clamav \
@@ -24,8 +24,8 @@ RUN \
     && usermod -d /var/lib/postgresql -s /bin/bash -a -G ssl-cert postgres \
     && usermod -d /var/lib/spamassassin -s /bin/sh -a -G mail debian-spamd \
     && usermod -d /var/run/epmd epmd \
-    && usermod -d /var/lib/couchdb -s /bin/bash couchdb \
-    && usermod -d /var/lib/mongodb -a -G nogroup mongodb \
+ #   && usermod -d /var/lib/couchdb -s /bin/bash couchdb \
+ #   && usermod -d /var/lib/mongodb -a -G nogroup mongodb \
     && usermod -d /var/lib/redis redis \
     && add-apt-repository "deb http://apt.postgresql.org/pub/repos/apt/ xenial-pgdg main" \
     && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add - \
@@ -111,7 +111,7 @@ RUN \
         --spamassassin yes --clamav yes \
         --iptables yes --fail2ban yes \
         --mysql yes --postgresql yes --remi yes \
-        --quota no --password MakeItSo18 \
+        --quota no --password N3vP@sS1n$ecur3! \
         -y no -f \
 
 # begin apache stuff
@@ -141,20 +141,19 @@ RUN \
 
 # install nodejs, memcached, redis-server, openvpn, mongodb, dotnet-sdk, and couchdb
     && apt-get install -yf --no-install-recommends nodejs memcached php-memcached redis-server \
-        openvpn mongodb-org php-mongodb couchdb dotnet-sdk-2.1.200 \
 
 # setting upawscli, golang
 # awscli
     && curl -O https://bootstrap.pypa.io/get-pip.py \
     && python get-pip.py \
-    && pip install awscli \
+#    && pip install awscli \
 
 # getting golang
-    && cd /tmp \
-    && curl -SL https://storage.googleapis.com/golang/go$GOLANG_VERSION.linux-amd64.tar.gz -o /tmp/golang.tar.gz \
-    && tar -zxf golang.tar.gz \
-    && mv go /usr/local \
-    && echo "\nGOROOT=/usr/local/go\nexport GOROOT\n" >> /root/.profile \
+#    && cd /tmp \
+#    && curl -SL https://storage.googleapis.com/golang/go$GOLANG_VERSION.linux-amd64.tar.gz -o /tmp/golang.tar.gz \
+#    && tar -zxf golang.tar.gz \
+#    && mv go /usr/local \
+#    && echo "\nGOROOT=/usr/local/go\nexport GOROOT\n" >> /root/.profile \
 
 # finish cleaning up
     && rm -rf /tmp/.spam* \
@@ -170,7 +169,7 @@ RUN \
 # tweaks
     && chmod +x /etc/init.d/dovecot \
     && chmod +x /etc/service/sshd/run \
-    && chmod +x /etc/init.d/mongod \
+#    && chmod +x /etc/init.d/mongod \
     && chmod +x /etc/my_init.d/startup.sh \
     && mv /sysprepz/admin/bin/vesta-*.sh /bin \
 
@@ -218,29 +217,29 @@ RUN \
     && ln -sf /etc/php/7.2/mods-available/pcs.ini /etc/php/7.2/fpm/conf.d/15-pcs.ini \
 
 
-    && echo "extension=couchbase.so" > /etc/php/5.6/mods-available/couchbase.ini \
-    && ln -sf /etc/php/5.6/mods-available/couchbase.ini /etc/php/5.6/apache2/conf.d/30-couchbase.ini \
-    && ln -sf /etc/php/5.6/mods-available/couchbase.ini /etc/php/5.6/cli/conf.d/30-couchbase.ini \
-    && ln -sf /etc/php/5.6/mods-available/couchbase.ini /etc/php/5.6/cgi/conf.d/30-couchbase.ini \
-    && ln -sf /etc/php/5.6/mods-available/couchbase.ini /etc/php/5.6/fpm/conf.d/30-couchbase.ini \
+#    && echo "extension=couchbase.so" > /etc/php/5.6/mods-available/couchbase.ini \
+#    && ln -sf /etc/php/5.6/mods-available/couchbase.ini /etc/php/5.6/apache2/conf.d/30-couchbase.ini \
+#    && ln -sf /etc/php/5.6/mods-available/couchbase.ini /etc/php/5.6/cli/conf.d/30-couchbase.ini \
+#    && ln -sf /etc/php/5.6/mods-available/couchbase.ini /etc/php/5.6/cgi/conf.d/30-couchbase.ini \
+#    && ln -sf /etc/php/5.6/mods-available/couchbase.ini /etc/php/5.6/fpm/conf.d/30-couchbase.ini \
 
-    && echo "extension=couchbase.so" > /etc/php/7.0/mods-available/couchbase.ini \
-    && ln -sf /etc/php/7.0/mods-available/couchbase.ini /etc/php/7.0/apache2/conf.d/30-couchbase.ini \
-    && ln -sf /etc/php/7.0/mods-available/couchbase.ini /etc/php/7.0/cli/conf.d/30-couchbase.ini \
-    && ln -sf /etc/php/7.0/mods-available/couchbase.ini /etc/php/7.0/cgi/conf.d/30-couchbase.ini \
-    && ln -sf /etc/php/7.0/mods-available/couchbase.ini /etc/php/7.0/fpm/conf.d/30-couchbase.ini \
+#    && echo "extension=couchbase.so" > /etc/php/7.0/mods-available/couchbase.ini \
+#    && ln -sf /etc/php/7.0/mods-available/couchbase.ini /etc/php/7.0/apache2/conf.d/30-couchbase.ini \
+#    && ln -sf /etc/php/7.0/mods-available/couchbase.ini /etc/php/7.0/cli/conf.d/30-couchbase.ini \
+#    && ln -sf /etc/php/7.0/mods-available/couchbase.ini /etc/php/7.0/cgi/conf.d/30-couchbase.ini \
+#    && ln -sf /etc/php/7.0/mods-available/couchbase.ini /etc/php/7.0/fpm/conf.d/30-couchbase.ini \#
 
-    && echo "extension=couchbase.so" > /etc/php/7.1/mods-available/couchbase.ini \
-    && ln -sf /etc/php/7.1/mods-available/couchbase.ini /etc/php/7.1/apache2/conf.d/30-couchbase.ini \
-    && ln -sf /etc/php/7.1/mods-available/couchbase.ini /etc/php/7.1/cli/conf.d/30-couchbase.ini \
-    && ln -sf /etc/php/7.1/mods-available/couchbase.ini /etc/php/7.1/cgi/conf.d/30-couchbase.ini \
-    && ln -sf /etc/php/7.1/mods-available/couchbase.ini /etc/php/7.1/fpm/conf.d/30-couchbase.ini \
+ #   && echo "extension=couchbase.so" > /etc/php/7.1/mods-available/couchbase.ini \
+#    && ln -sf /etc/php/7.1/mods-available/couchbase.ini /etc/php/7.1/apache2/conf.d/30-couchbase.ini \
+#    && ln -sf /etc/php/7.1/mods-available/couchbase.ini /etc/php/7.1/cli/conf.d/30-couchbase.ini \
+#    && ln -sf /etc/php/7.1/mods-available/couchbase.ini /etc/php/7.1/cgi/conf.d/30-couchbase.ini \
+#    && ln -sf /etc/php/7.1/mods-available/couchbase.ini /etc/php/7.1/fpm/conf.d/30-couchbase.ini \
 
-    && echo "extension=couchbase.so" > /etc/php/7.2/mods-available/couchbase.ini \
-    && ln -sf /etc/php/7.2/mods-available/couchbase.ini /etc/php/7.2/apache2/conf.d/30-couchbase.ini \
-    && ln -sf /etc/php/7.2/mods-available/couchbase.ini /etc/php/7.2/cli/conf.d/30-couchbase.ini \
-    && ln -sf /etc/php/7.2/mods-available/couchbase.ini /etc/php/7.2/cgi/conf.d/30-couchbase.ini \
-    && ln -sf /etc/php/7.2/mods-available/couchbase.ini /etc/php/7.2/fpm/conf.d/30-couchbase.ini \
+ #   && echo "extension=couchbase.so" > /etc/php/7.2/mods-available/couchbase.ini \
+#    && ln -sf /etc/php/7.2/mods-available/couchbase.ini /etc/php/7.2/apache2/conf.d/30-couchbase.ini \
+#    && ln -sf /etc/php/7.2/mods-available/couchbase.ini /etc/php/7.2/cli/conf.d/30-couchbase.ini \
+#    && ln -sf /etc/php/7.2/mods-available/couchbase.ini /etc/php/7.2/cgi/conf.d/30-couchbase.ini \
+#    && ln -sf /etc/php/7.2/mods-available/couchbase.ini /etc/php/7.2/fpm/conf.d/30-couchbase.ini \
 
 # performance tweaks
     && chmod 0755 /etc/init.d/disable-transparent-hugepages \
@@ -249,9 +248,9 @@ RUN \
     && sed -i -e "s/^\-m 64/\-m 256/g" /etc/memcached.conf \
 
 # couchdb stuff
-    && mkdir -p /var/lib/couchdb \
-    && chown -R couchdb:couchdb /usr/bin/couchdb /etc/couchdb /usr/share/couchdb /var/lib/couchdb  \
-    && chmod -R 0770 /usr/bin/couchdb /etc/couchdb /usr/share/couchdb /var/lib/couchdb \
+#    && mkdir -p /var/lib/couchdb \
+#    && chown -R couchdb:couchdb /usr/bin/couchdb /etc/couchdb /usr/share/couchdb /var/lib/couchdb  \
+#    && chmod -R 0770 /usr/bin/couchdb /etc/couchdb /usr/share/couchdb /var/lib/couchdb \
  
 # secure ssh
     && sed -i -e "s/PermitRootLogin prohibit-password/PermitRootLogin no/g" /etc/ssh/sshd_config \
@@ -488,11 +487,11 @@ RUN \
     && rm -rf /etc/redis \
     && ln -s /vesta/etc/redis /etc/redis \
 
-    && mkdir -p /var/lib/mongodb \
-    && chown -R mongodb:mongodb /var/lib/mongodb \
-    && mv /var/lib/mongodb /vesta-start/var/lib/mongodb \
-    && rm -rf /var/lib/mongodb \
-    && ln -s /vesta/var/lib/mongodb /var/lib/mongodb \
+ #   && mkdir -p /var/lib/mongodb \
+ #   && chown -R mongodb:mongodb /var/lib/mongodb \
+ #   && mv /var/lib/mongodb /vesta-start/var/lib/mongodb \
+ #   && rm -rf /var/lib/mongodb \
+ #   && ln -s /vesta/var/lib/mongodb /var/lib/mongodb \
 
     && mkdir -p /var/lib/redis \
     && chown -R redis:redis /var/lib/redis \
@@ -508,9 +507,9 @@ RUN \
     && rm -rf /etc/dovecot \
     && ln -s /vesta/etc/dovecot /etc/dovecot \
 
-    && mv /etc/openvpn /vesta-start/etc/openvpn \
-    && rm -rf /etc/openvpn \
-    && ln -s /vesta/etc/openvpn /etc/openvpn \
+ #   && mv /etc/openvpn /vesta-start/etc/openvpn \
+ #   && rm -rf /etc/openvpn \
+ #   && ln -s /vesta/etc/openvpn /etc/openvpn \
 
     && mv /etc/mysql   /vesta-start/etc/mysql \
     && rm -rf /etc/mysql \
@@ -556,17 +555,17 @@ RUN \
     && rm -rf /var/log \
     && ln -s /vesta/var/log /var/log \
 
-    && mv /etc/mongod.conf /vesta-start/etc/mongod.conf \
-    && rm -rf /etc/mongod.conf \
-    && ln -s /vesta/etc/mongod.conf /etc/mongod.conf \
+ #   && mv /etc/mongod.conf /vesta-start/etc/mongod.conf \
+ #   && rm -rf /etc/mongod.conf \
+ #   && ln -s /vesta/etc/mongod.conf /etc/mongod.conf \
 
-    && mv /etc/couchdb /vesta-start/etc/couchdb \
-    && rm -rf /etc/couchdb \
-    && ln -s /vesta/etc/couchdb /etc/couchdb \
+#    && mv /etc/couchdb /vesta-start/etc/couchdb \
+#    && rm -rf /etc/couchdb \
+#    && ln -s /vesta/etc/couchdb /etc/couchdb \
 
-    && mv /var/lib/couchdb /vesta-start/var/lib/couchdb \
-    && rm -rf /var/lib/couchdb \
-    && ln -s /vesta/var/lib/couchdb /var/lib/couchdb \
+#    && mv /var/lib/couchdb /vesta-start/var/lib/couchdb \
+#    && rm -rf /var/lib/couchdb \
+#    && ln -s /vesta/var/lib/couchdb /var/lib/couchdb \
 
     && mkdir -p /sysprepz/home \
     && rsync -a /home/* /sysprepz/home \
